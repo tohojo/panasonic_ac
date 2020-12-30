@@ -22,7 +22,7 @@ CONFIG_SCHEMA = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
-COMPONENT_TYPES = ["climate"]
+COMPONENT_TYPES = ["climate", "sensor"]
 _LOGGER = logging.getLogger(__name__)
 
 def setup(hass, config) -> bool:
@@ -32,12 +32,12 @@ def setup(hass, config) -> bool:
     username = config[DOMAIN][CONF_USERNAME]
     password = config[DOMAIN][CONF_PASSWORD]
 
-    api = pcomfortcloud.Session(username, password, verifySsl=False)
+    api = pcomfortcloud.Session(username, password, verifySsl=True)
     api.login()
 
     hass.data[DOMAIN] = {}
     hass.data[DOMAIN]["api"] = api
 
     load_platform(hass, "climate", DOMAIN, {}, config)
-    #load_platform(hass, "sensor", DOMAIN, {}, config)
+    load_platform(hass, "sensor", DOMAIN, {}, config)
     return True
